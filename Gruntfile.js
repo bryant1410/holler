@@ -1,43 +1,36 @@
-/*global module:false*/
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
 	// Project configuration.
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
-		jshint: {
-			files: ['src/*.js', 'bin/*.js']
+		stylus: {
+			compile: {
+				files: {
+					'styles/app.css': 'styles/styl/app.styl'
+				}
+			}
 		},
 		concat: {
 			dist: {
-				src: ['vendor/alertify/lib/alertify.js', 'src/holler-client.js'],
-        		dest: 'dist/<%= pkg.name %>-client.concat.js'
+				src: [
+					'vendor/bootstrap.min.css',
+					'vendor/bootstrap-responsive.min.css',
+					'styles/app.css'
+				],
+				dest: 'styles/app.css'
 			}
 		},
-		uglify: {
-			build: {
-				src: '<%= concat.dist.dest %>',
-     	   		dest: 'dist/<%= pkg.name %>-client.min.js'
-			}
-		},
-		cssmin: {
-			compress: {
-				files: {
-			  		'dist/themes/<%= pkg.name %>.css': [
-			  			'vendor/alertify/themes/alertify.core.css', 
-			  			'vendor/alertify/themes/alertify.bootstrap.css'
-			  		]
-				}
-			}
+		watch: {
+			files: 'styles/styl/*.styl',
+			tasks: ['default']
 		}
 	});
 
-	// Load the plugin that provides the "uglify" task.
-	grunt.loadNpmTasks('grunt-contrib-uglify');
-	grunt.loadNpmTasks('grunt-contrib-jshint');
+	// Load the plugins
+	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-contrib-stylus');
 	grunt.loadNpmTasks('grunt-contrib-concat');
-	grunt.loadNpmTasks('grunt-contrib-cssmin');
 
 	// Default task(s).
-	grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'cssmin']);
-
+	grunt.registerTask('default', ['stylus', 'concat']);
 };
